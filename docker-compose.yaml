@@ -1,0 +1,6 @@
+services:
+  heim:
+    build:
+      dockerfile: build/Dockerfile
+    environment:
+      TOKEN: 5184789066:AAFw603HkeMBUyhectXfPeUzLH7nDOl5_t0

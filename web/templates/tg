@@ -1,0 +1,6 @@
+{{ if eq .GetEventLevel 0 }}🟢{{else}}{{ if eq .GetEventLevel 2 }}🔴{{end}}{{end}} _*{{ .GetReadableResource }}: {{ .GetTitle | escapeMarkdown }}*_
+
+{{ with .GetDescription }}*Desc*: {{ escapeMarkdown . }}{{end}}
+{{ with .GetLevel }}*Level:* {{ escapeMarkdown . }}{{end}}
+
+{{ with .GetLink }}[Go to Sentry]({{ . }}){{ end }}

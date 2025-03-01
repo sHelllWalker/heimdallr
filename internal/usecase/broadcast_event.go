@@ -36,6 +36,7 @@ func (b BroadcastEvent) Do(
 		err := t.Execute(&message, event)
 		if err != nil {
 			b.logger.Error("template executing fail", slog.Any("messenger", messenger), slog.Any("error", err))
+
 			continue
 		}
 

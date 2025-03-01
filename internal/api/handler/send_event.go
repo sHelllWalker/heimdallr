@@ -28,6 +28,7 @@ func NewSendEvent(logger *slog.Logger, uc *usecase.BroadcastEvent) *SendEvent {
 func (r *SendEvent) Handle(writer http.ResponseWriter, request *http.Request) {
 	if request.Method != http.MethodPost {
 		r.writeError(writer)
+
 		return
 	}
 
@@ -43,6 +44,7 @@ func (r *SendEvent) Handle(writer http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		r.logger.Error("bad request", slog.Any("error", err))
 		r.writeError(writer)
+
 		return
 	}
 
@@ -123,7 +125,9 @@ func matchEventLevelToColor(lvl enums.EventLevel) string {
 		return "#008000"
 	case enums.Problem:
 		return "#FF0000"
-	default:
+	case enums.Notification:
 		return "#808080"
 	}
+
+	return ""
 }

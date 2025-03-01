@@ -34,6 +34,7 @@ func (m *Mailer) SendMessage(
 			slog.Any("messenger", messenger),
 			slog.String("reason", "provider not found"),
 		)
+
 		return
 	}
 
@@ -44,11 +45,13 @@ func (m *Mailer) SendMessage(
 			slog.Any("messenger", messenger),
 			slog.Any("reason", err),
 		)
+
 		return
 	}
 
 	if !isSend {
 		m.logger.Debug("message not sended", slog.Any("messenger", messenger))
+
 		return
 	}
 

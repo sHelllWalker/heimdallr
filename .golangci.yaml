@@ -4,16 +4,8 @@ linters:
   enable-all: true
   disable:
     # deprecated
-    - deadcode
-    - exhaustivestruct
-    - golint
-    - ifshort
-    - interfacer
-    - maligned
-    - nosnakecase
-    - scopelint
-    - structcheck
-    - varcheck
+    - tenv
+    - goerr113
     # strange
     - gci
     - goimports
@@ -26,7 +18,6 @@ linters:
     - goconst
     - godot
     - godox
-    - gomnd
     - gosec
     - ireturn
     - nilnil
@@ -37,9 +28,10 @@ linters:
     - testpackage
     - varnamelen
     - wsl
+    - gofumpt
+    - mnd
     # other reasons
     - cyclop   # gocognit  do the same
     - funlen   # gocognit  do the same
-    - goerr113 # errorlint do the same
     - gocyclo  # gocognit  do the same
     - maintidx # gocognit  do the same

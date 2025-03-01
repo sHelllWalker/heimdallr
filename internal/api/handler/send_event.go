@@ -123,7 +123,9 @@ func matchEventLevelToColor(lvl enums.EventLevel) string {
 		return "#008000"
 	case enums.Problem:
 		return "#FF0000"
-	default:
+	case enums.Notification:
 		return "#808080"
 	}
+
+	return ""
 }

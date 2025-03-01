@@ -5,7 +5,6 @@ linters:
   disable:
     # deprecated
     - tenv
-    - goerr113
     # strange
     - gci
     - goimports
@@ -35,3 +34,4 @@ linters:
     - funlen   # gocognit  do the same
     - gocyclo  # gocognit  do the same
     - maintidx # gocognit  do the same
+    - err113   # errorlint do the same

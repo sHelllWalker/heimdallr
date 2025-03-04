@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"log/slog"
+	"os"
 	"strings"
 	"text/template"
 
@@ -52,22 +53,21 @@ func (t *Templater) GetTemplate(messenger enums.Messenger, event enums.Event) *t
 func (t *Templater) createTemplate(config config.TemplateConfig, m enums.Messenger) {
 	t.initDefaulTemplate(m)
 
+	templateByFilePath := make(map[string]*template.Template, 0)
+
 	userTemplatePaths := getUserPaths(config, m)
 	for event, templatePath := range userTemplatePaths {
 		if templatePath == "" {
 			continue
 		}
 
-		var err error
-		userTemplate := template.New(templatePath)
-		t.registerFunctions(userTemplate)
-		userTemplate, err = userTemplate.ParseFiles(templatePath)
-		if err != nil {
-			t.logger.Error(
-				fmt.Sprintf("can`t create user template by path `%s`", templatePath),
-				slog.Any("error", err),
-			)
+		userTemplate, found := templateByFilePath[templatePath]
+		if !found {
+			userTemplate = t.parseFile(templatePath, fmt.Sprintf("%s_%s", m, event))
+			templateByFilePath[templatePath] = userTemplate
+		}
 
+		if userTemplate == nil {
 			continue
 		}
 
@@ -94,6 +94,27 @@ func (t *Templater) registerFunctions(templ *template.Template) {
 			return t.markdownReplacer.Replace(s)
 		},
 	})
+}
+
+func (t *Templater) parseFile(path string, templateName string) *template.Template {
+	templateBytes, err := os.ReadFile(path)
+	if err != nil {
+		t.logger.Error("can`t read file by user path", slog.String("path", path), slog.Any("error", err))
+
+		return nil
+	}
+
+	userTemplate := template.New(templateName)
+	t.registerFunctions(userTemplate)
+
+	userTemplate, err = userTemplate.Parse(string(templateBytes))
+	if err != nil {
+		t.logger.Error("can`t create user template", slog.String("path", path), slog.Any("error", err))
+
+		return nil
+	}
+
+	return userTemplate
 }
 
 func getUserPaths(config config.TemplateConfig, m enums.Messenger) map[enums.Event]string {

@@ -40,6 +40,12 @@ func (b BroadcastEvent) Do(
 			continue
 		}
 
-		b.mailer.SendMessage(message.String(), messenger, opts, mOpts)
+		if err = b.mailer.SendMessage(message.String(), messenger, opts, mOpts); err != nil {
+			b.logger.Error(
+				"message sending failure",
+				slog.String("messenger", string(messenger)),
+				slog.Any("error", err),
+			)
+		}
 	}
 }

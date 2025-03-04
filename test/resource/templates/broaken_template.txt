@@ -1,0 +1,6 @@
+### { .GetResource }}: {{ escapeMarkdown .GetTitle  }}
+---
+{{ with .GetDescription }}**Desc:** {{ escapeMarkdown . }}{{end}
+{{ with .GetLevel }}**Level:** {{ escapeMarkdown . }}{{end}}
+
+{ with .GetLink }}[Go to Sentry]( . }}){{end}}

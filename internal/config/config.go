@@ -54,7 +54,7 @@ type TemplateConfig struct {
 func InitConfig() (*Config, error) {
 	conf, err := env.ParseAs[Config]()
 	if err != nil {
-		return &conf, err
+		return nil, err
 	}
 
 	return &conf, validator.New().Struct(conf)

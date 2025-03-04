@@ -10,3 +10,7 @@ const (
 	Comments     = "comment"
 	Errors       = "error"
 )
+
+func Events() []Event {
+	return []Event{Installation, IssueAlert, MetricAlert, Issues, Comments, Errors}
+}

@@ -1,13 +1,14 @@
 package service
 
 import (
+	"errors"
 	"log/slog"
 
 	"github.com/sHelllWalker/heimdallr/internal/enums"
 	"github.com/sHelllWalker/heimdallr/internal/types"
 )
 
-const sendMessageError = "message sending failure"
+var ErrUndefinedMessenger = errors.New("undefined messenger")
 
 type Mailer struct {
 	logger      *slog.Logger
@@ -26,34 +27,24 @@ func (m *Mailer) SendMessage(
 	messenger enums.Messenger,
 	messengerOpts types.ProviderOptions,
 	messageOpts types.MessageOptions,
-) {
+) error {
 	provider, found := m.providerMap[messenger]
 	if !found {
-		m.logger.Error(
-			sendMessageError,
-			slog.Any("messenger", messenger),
-			slog.String("reason", "provider not found"),
-		)
-
-		return
+		return ErrUndefinedMessenger
 	}
 
 	isSend, err := provider.Send(message, messengerOpts, messageOpts)
 	if err != nil {
-		m.logger.Error(
-			sendMessageError,
-			slog.Any("messenger", messenger),
-			slog.Any("reason", err),
-		)
-
-		return
+		return err
 	}
 
 	if !isSend {
 		m.logger.Debug("message not sended", slog.Any("messenger", messenger))
 
-		return
+		return nil
 	}
 
 	m.logger.Debug("message sending success", slog.Any("messenger", messenger))
+
+	return nil
 }

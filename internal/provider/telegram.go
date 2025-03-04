@@ -50,23 +50,27 @@ func (t *Telegram) Send(text string, opts types.ProviderOptions, _ types.Message
 	}
 
 	result := struct {
-		Ok          bool   `json:"ok"`
-		Description string `json:"description"`
-		Result      struct {
+		Ok     bool `json:"ok"`
+		Result struct {
 			MessageID int `json:"message_id"`
 		} `json:"result"`
+	}{}
+
+	errResp := struct {
+		Description string `json:"description"`
 	}{}
 
 	resp, err := t.client.R().
 		SetBody(body).
 		SetContentLength(true).
 		SetResult(&result).
+		SetError(&errResp).
 		Post(fmt.Sprintf(tgAPIPathPattern, t.conf.Token, "sendMessage"))
 	if err != nil {
 		return false, err
 	}
 	if resp.StatusCode() != http.StatusOK || !result.Ok {
-		return false, fmt.Errorf("fail request, description: `%s`", result.Description)
+		return false, fmt.Errorf("fail request, description: `%s`", errResp.Description)
 	}
 
 	return true, nil

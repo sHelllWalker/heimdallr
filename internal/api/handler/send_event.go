@@ -97,7 +97,6 @@ func unmarshalEvent[T types.RenderableEvent](body []byte, resource string) (T, e
 func (r *SendEvent) writeError(writer http.ResponseWriter) {
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusBadRequest)
-	writer.Header().Add("Content-Type", "application/json")
 
 	err := json.NewEncoder(writer).Encode(map[string]any{
 		"success": false,
